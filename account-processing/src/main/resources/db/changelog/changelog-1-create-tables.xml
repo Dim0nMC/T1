@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- Таблица Account -->
+    <changeSet id="1" author="dmitry">
+        <createTable tableName="accounts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="NUMERIC(19,2)" defaultValue="0"/>
+            <column name="interest_rate" type="NUMERIC(5,2)"/>
+            <column name="is_recalc" type="BOOLEAN" defaultValue="false"/>
+            <column name="card_exist" type="BOOLEAN" defaultValue="false"/>
+            <column name="status" type="VARCHAR(20)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Таблица Card -->
+    <changeSet id="2" author="dmitry">
+        <createTable tableName="cards">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="payment_system" type="VARCHAR(20)"/>
+            <column name="status" type="VARCHAR(20)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cards"
+                                 baseColumnNames="account_id"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_cards_accounts"/>
+    </changeSet>
+
+    <!-- Таблица Payment -->
+    <changeSet id="3" author="dmitry">
+        <createTable tableName="payments">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payment_date" type="TIMESTAMP"/>
+            <column name="amount" type="NUMERIC(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_credit" type="BOOLEAN" defaultValue="false"/>
+            <column name="payed_at" type="TIMESTAMP"/>
+            <column name="type" type="VARCHAR(20)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="payments"
+                                 baseColumnNames="account_id"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_payments_accounts"/>
+    </changeSet>
+
+    <!-- Таблица Transaction -->
+    <changeSet id="4" author="dmitry">
+        <createTable tableName="transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="card_id" type="BIGINT"/>
+            <column name="type" type="VARCHAR(20)"/>
+            <column name="amount" type="NUMERIC(19,2)"/>
+            <column name="status" type="VARCHAR(20)"/>
+            <column name="timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="transactions"
+                                 baseColumnNames="account_id"
+                                 referencedTableName="accounts"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transactions_accounts"/>
+        <addForeignKeyConstraint baseTableName="transactions"
+                                 baseColumnNames="card_id"
+                                 referencedTableName="cards"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_transactions_cards"/>
+    </changeSet>
+
+</databaseChangeLog>

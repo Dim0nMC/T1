@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- Accounts -->
+    <changeSet id="200" author="dmitry">
+        <insert tableName="accounts">
+            <column name="id" valueNumeric="1"/>
+            <column name="client_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="1"/>
+            <column name="balance" valueNumeric="1000.00"/>
+            <column name="interest_rate" valueNumeric="1.5"/>
+            <column name="is_recalc" valueBoolean="true"/>
+            <column name="card_exist" valueBoolean="true"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="accounts">
+            <column name="id" valueNumeric="2"/>
+            <column name="client_id" valueNumeric="2"/>
+            <column name="product_id" valueNumeric="2"/>
+            <column name="balance" valueNumeric="5000.00"/>
+            <column name="interest_rate" valueNumeric="2.0"/>
+            <column name="is_recalc" valueBoolean="false"/>
+            <column name="card_exist" valueBoolean="true"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+    </changeSet>
+
+    <!-- Cards -->
+    <changeSet id="201" author="dmitry">
+        <insert tableName="cards">
+            <column name="id" valueNumeric="1"/>
+            <column name="account_id" valueNumeric="1"/>
+            <column name="card_id" value="1111-2222-3333-4444"/>
+            <column name="payment_system" value="VISA"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="cards">
+            <column name="id" valueNumeric="2"/>
+            <column name="account_id" valueNumeric="2"/>
+            <column name="card_id" value="5555-6666-7777-8888"/>
+            <column name="payment_system" value="MASTERCARD"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+    </changeSet>
+
+    <!-- Payments -->
+    <changeSet id="202" author="dmitry">
+        <insert tableName="payments">
+            <column name="id" valueNumeric="1"/>
+            <column name="account_id" valueNumeric="1"/>
+            <column name="payment_date" valueDate="2025-08-01T10:00:00"/>
+            <column name="amount" valueNumeric="200.00"/>
+            <column name="is_credit" valueBoolean="true"/>
+            <column name="payed_at" valueDate="2025-08-01T12:00:00"/>
+            <column name="type" value="ONLINE"/>
+        </insert>
+        <insert tableName="payments">
+            <column name="id" valueNumeric="2"/>
+            <column name="account_id" valueNumeric="2"/>
+            <column name="payment_date" valueDate="2025-08-02T14:30:00"/>
+            <column name="amount" valueNumeric="500.00"/>
+            <column name="is_credit" valueBoolean="false"/>
+            <column name="payed_at" valueDate="2025-08-02T15:00:00"/>
+            <column name="type" value="ATM"/>
+        </insert>
+    </changeSet>
+
+    <!-- Transactions -->
+    <changeSet id="203" author="dmitry">
+        <insert tableName="transactions">
+            <column name="id" valueNumeric="1"/>
+            <column name="account_id" valueNumeric="1"/>
+            <column name="card_id" valueNumeric="1"/>
+            <column name="type" value="PAYMENT"/>
+            <column name="amount" valueNumeric="200.00"/>
+            <column name="status" value="COMPLETE"/>
+            <column name="timestamp" valueDate="2025-08-01T10:05:00"/>
+        </insert>
+        <insert tableName="transactions">
+            <column name="id" valueNumeric="2"/>
+            <column name="account_id" valueNumeric="2"/>
+            <column name="card_id" valueNumeric="2"/>
+            <column name="type" value="WITHDRAW"/>
+            <column name="amount" valueNumeric="500.00"/>
+            <column name="status" value="COMPLETE"/>
+            <column name="timestamp" valueDate="2025-08-02T14:35:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

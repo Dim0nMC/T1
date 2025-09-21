@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- ProductRegistry -->
+    <changeSet id="200" author="dmitry">
+        <insert tableName="product_registry">
+            <column name="id" valueNumeric="1"/>
+            <column name="client_id" valueNumeric="1"/>
+            <column name="account_id" valueNumeric="1"/>
+            <column name="product_id" valueNumeric="3"/>
+            <column name="interest_rate" valueNumeric="5.5"/>
+            <column name="open_date" valueDate="2025-07-01"/>
+        </insert>
+        <insert tableName="product_registry">
+            <column name="id" valueNumeric="2"/>
+            <column name="client_id" valueNumeric="2"/>
+            <column name="account_id" valueNumeric="2"/>
+            <column name="product_id" valueNumeric="2"/>
+            <column name="interest_rate" valueNumeric="6.0"/>
+            <column name="open_date" valueDate="2025-07-15"/>
+        </insert>
+    </changeSet>
+
+    <!-- PaymentRegistry -->
+    <changeSet id="201" author="dmitry">
+        <insert tableName="payment_registry">
+            <column name="id" valueNumeric="1"/>
+            <column name="product_registry_id" valueNumeric="1"/>
+            <column name="payment_date" valueDate="2025-08-01"/>
+            <column name="amount" valueNumeric="150.00"/>
+            <column name="interest_rate_amount" valueNumeric="8.25"/>
+            <column name="debt_amount" valueNumeric="0.00"/>
+            <column name="expired" valueBoolean="false"/>
+            <column name="payment_expiration_date" valueDate="2025-08-15"/>
+        </insert>
+        <insert tableName="payment_registry">
+            <column name="id" valueNumeric="2"/>
+            <column name="product_registry_id" valueNumeric="2"/>
+            <column name="payment_date" valueDate="2025-08-05"/>
+            <column name="amount" valueNumeric="200.00"/>
+            <column name="interest_rate_amount" valueNumeric="12.00"/>
+            <column name="debt_amount" valueNumeric="0.00"/>
+            <column name="expired" valueBoolean="false"/>
+            <column name="payment_expiration_date" valueDate="2025-08-20"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
