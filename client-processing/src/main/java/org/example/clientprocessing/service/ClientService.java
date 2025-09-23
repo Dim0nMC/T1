@@ -41,7 +41,7 @@ public class ClientService {
 
     public Client create(ClientDTO clientDTO, User user) {
         Client client = new Client();
-        client.setClientId(clientDTO.getClientId());
+        //client.setClientId(clientDTO.getClientId());
         client.setUser(user);
         client.setFirstName(clientDTO.getFirstName());
         client.setMiddleName(clientDTO.getMiddleName());
@@ -71,11 +71,15 @@ public class ClientService {
         }
 
         ClientDTO clientDTO = mapper.toClientDTO(clientRegistrationDTO);
-        clientDTO.setClientId(clientIdGeneratorService.generateClientId(clientRegistrationDTO));
+        //clientDTO.setClientId(clientIdGeneratorService.generateClientId(clientRegistrationDTO));
         UserDTO userDTO = mapper.toUserDTO(clientRegistrationDTO);
 
         User user = userService.create(userDTO);
         Client client = this.create(clientDTO, user);
+
+        String generatedClientId = clientIdGeneratorService.generateClientId(client.getId());
+        client.setClientId(generatedClientId);
+        clientRepository.save(client);
 
         return user;
     }
