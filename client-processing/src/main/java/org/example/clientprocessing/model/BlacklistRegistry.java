@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.clientprocessing.model.enums.DocumentType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class BlacklistRegistry {
     private Long id;
 
     @Column(length = 50, nullable = false)
-    private String documentType;
+    private DocumentType documentType;
 
     @Column(length = 100, nullable = false)
     private String documentId;
