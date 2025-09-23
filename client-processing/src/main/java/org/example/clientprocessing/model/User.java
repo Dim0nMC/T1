@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,8 +27,8 @@ public class User {
     @Column(nullable = false, length = 100)
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Client> clients;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Client client;
 
 
 }

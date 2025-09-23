@@ -19,6 +19,9 @@
             <column name="password" value="secret456"/>
             <column name="email" value="jane.smith@example.com"/>
         </insert>
+        <rollback>
+            <delete tableName="users"/>
+        </rollback>
     </changeSet>
 
     <!-- Clients -->
@@ -49,6 +52,9 @@
             <column name="document_prefix" value="77"/>
             <column name="document_suffix" value="02"/>
         </insert>
+        <rollback>
+            <delete tableName="clients"/>
+        </rollback>
     </changeSet>
 
     <!-- Products -->
@@ -74,6 +80,9 @@
             <column name="create_date" valueDate="2025-02-15"/>
             <column name="product_id" value="AC3"/>
         </insert>
+        <rollback>
+            <delete tableName="products"/>
+        </rollback>
     </changeSet>
 
     <!-- Client Products -->
@@ -83,7 +92,7 @@
             <column name="client_id" valueNumeric="1"/>
             <column name="product_id" valueNumeric="1"/>
             <column name="open_date" valueDate="2025-01-01"/>
-            <column name="close_date" value="NULL"/>
+            <column name="close_date" valueComputed="NULL"/>
             <column name="status" value="ACTIVE"/>
         </insert>
         <insert tableName="client_products">
@@ -91,7 +100,7 @@
             <column name="client_id" valueNumeric="1"/>
             <column name="product_id" valueNumeric="3"/>
             <column name="open_date" valueDate="2025-03-01"/>
-            <column name="close_date" value="NULL"/>
+            <column name="close_date" valueComputed="NULL"/>
             <column name="status" value="ACTIVE"/>
         </insert>
         <insert tableName="client_products">
@@ -99,9 +108,12 @@
             <column name="client_id" valueNumeric="2"/>
             <column name="product_id" valueNumeric="2"/>
             <column name="open_date" valueDate="2025-02-15"/>
-            <column name="close_date" value="NULL"/>
+            <column name="close_date" valueComputed="NULL"/>
             <column name="status" value="ACTIVE"/>
         </insert>
+        <rollback>
+            <delete tableName="client_products"/>
+        </rollback>
     </changeSet>
 
     <!-- Blacklist Registry -->
@@ -110,7 +122,7 @@
             <column name="id" valueNumeric="1"/>
             <column name="document_type" value="PASSPORT"/>
             <column name="document_id" value="ZZ112233"/>
-            <column name="blacklisted_at" valueDate="NOW()"/>
+            <column name="blacklisted_at" valueComputed="CURRENT_TIMESTAMP"/>
             <column name="reason" value="Fraud"/>
             <column name="blacklist_expiration_date" valueDate="2026-01-01"/>
         </insert>
@@ -118,10 +130,13 @@
             <column name="id" valueNumeric="2"/>
             <column name="document_type" value="INT_PASSPORT"/>
             <column name="document_id" value="YY445566"/>
-            <column name="blacklisted_at" valueDate="NOW()"/>
+            <column name="blacklisted_at" valueComputed="CURRENT_TIMESTAMP"/>
             <column name="reason" value="Lost document"/>
-            <column name="blacklist_expiration_date" value="NULL"/>
+            <column name="blacklist_expiration_date" valueComputed="NULL"/>
         </insert>
+        <rollback>
+            <delete tableName="blacklist_registry"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
