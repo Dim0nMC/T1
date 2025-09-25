@@ -1,0 +1,20 @@
+package org.example.clientprocessing.kafka;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class ClientProductProducer {
+
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    public void sendToClientProducts(String message) {
+        kafkaTemplate.send("client_products", message);
+    }
+
+    public void sendToClientCreditProducts(String message) {
+        kafkaTemplate.send("client_credit_products", message);
+    }
+}
