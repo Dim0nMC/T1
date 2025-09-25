@@ -9,13 +9,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface ClientUserMapper {
 
-    // Map ClientRegistrationDTO -> ClientDTO
+
     ClientDTO toClientDTO(ClientRegistrationDTO dto);
 
-    // Map ClientRegistrationDTO -> UserDTO
     UserDTO toUserDTO(ClientRegistrationDTO dto);
 
-    // Map обратно (по необходимости)
     ClientRegistrationDTO fromClientDTO(ClientDTO clientDTO, UserDTO userDTO);
 
 }

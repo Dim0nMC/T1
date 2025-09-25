@@ -1,6 +1,9 @@
 package org.example.clientprocessing.model.dto;
 
 import lombok.*;
+import org.example.clientprocessing.model.enums.Status;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -9,5 +12,7 @@ import lombok.*;
 public class ClientProductRequestDTO {
     private Long clientId;
     private Long productId;
-    private String status;
+    private Status status;
+    private LocalDate openDate;
+    private LocalDate closeDate;
 }

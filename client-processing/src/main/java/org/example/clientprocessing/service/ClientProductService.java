@@ -1,11 +1,13 @@
 package org.example.clientprocessing.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.clientprocessing.kafka.ClientProductProducer;
 import org.example.clientprocessing.mapper.ClientProductMapper;
 import org.example.clientprocessing.model.*;
 import org.example.clientprocessing.model.dto.*;
 import org.example.clientprocessing.model.enums.Key;
+import org.example.clientprocessing.model.enums.Status;
 import org.example.clientprocessing.repository.*;
 import org.springframework.stereotype.Service;
 
@@ -25,21 +27,19 @@ public class ClientProductService {
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
         Client client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Client not found"));
 
         Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-        ClientProduct clientProduct = ClientProduct.builder()
-                .client(client)
-                .product(product)
-                .status(dto.getStatus())
-                .openDate(LocalDate.now())
-                .build();
+        ClientProduct clientProduct = new ClientProduct();
+        clientProduct.setClient(client);
+        clientProduct.setProduct(product);
+        clientProduct.setStatus(dto.getStatus());
+        clientProduct.setOpenDate(LocalDate.now());
 
         ClientProduct saved = clientProductRepository.save(clientProduct);
 
-        // Отправляем сообщение в Kafka
         if (isCreditProduct(product.getKey())) {
             producer.sendToClientCreditProducts("Client " + client.getId() + " opened product " + product.getKey());
         } else {
@@ -56,11 +56,33 @@ public class ClientProductService {
                 .collect(Collectors.toList());
     }
 
+    public ClientProductResponseDTO update(Long id, ClientProductRequestDTO dto){
+
+
+        ClientProduct clientProduct = clientProductRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ClientProduct not found with id: " + id));
+
+
+        clientProduct.setStatus(dto.getStatus());
+
+        if (dto.getCloseDate() != null) {
+            clientProduct.setCloseDate(dto.getCloseDate());
+        }
+
+        if (dto.getProductId() != null) {
+            Product product = productRepository.findById(dto.getProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Product not found: " + dto.getProductId()));
+            clientProduct.setProduct(product);
+        }
+
+        return mapper.toResponseDTO(clientProductRepository.save(clientProduct));
+    }
+
     public void closeClientProduct(Long id) {
         ClientProduct clientProduct = clientProductRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Client product not found"));
         clientProduct.setCloseDate(LocalDate.now());
-        clientProduct.setStatus("CLOSED");
+        clientProduct.setStatus(Status.CLOSED);
         clientProductRepository.save(clientProduct);
     }
 
