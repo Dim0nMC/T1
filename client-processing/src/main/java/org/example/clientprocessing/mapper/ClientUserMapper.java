@@ -14,6 +14,6 @@ public interface ClientUserMapper {
 
     UserDTO toUserDTO(ClientRegistrationDTO dto);
 
-    ClientRegistrationDTO fromClientDTO(ClientDTO clientDTO, UserDTO userDTO);
+    ClientRegistrationDTO toClientRegistrationDTO(ClientDTO clientDTO, UserDTO userDTO);
 
 }

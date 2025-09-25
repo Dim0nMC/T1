@@ -22,7 +22,7 @@ public class ClientProductService {
     private final ClientProductRepository clientProductRepository;
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
-    private final ClientProductMapper mapper;
+    private final ClientProductMapper clientProductMapper;
     private final ClientProductProducer producer;
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
@@ -46,24 +46,30 @@ public class ClientProductService {
             producer.sendToClientProducts("Client " + client.getId() + " opened product " + product.getKey());
         }
 
-        return mapper.toResponseDTO(saved);
+        return clientProductMapper.toResponseDTO(saved);
     }
 
-    public List<ClientProductResponseDTO> get(Long clientId) {
+    public List<ClientProductResponseDTO> getAll() {
         return clientProductRepository.findAll().stream()
-                .filter(cp -> cp.getClient().getId().equals(clientId))
-                .map(mapper::toResponseDTO)
+                .map(clientProductMapper::toResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ClientProductResponseDTO getById (Long id) {
+        ClientProduct clientProduct = clientProductRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("ClientProduct not found with id: " + id));
+        return clientProductMapper.toResponseDTO(clientProduct);
     }
 
     public ClientProductResponseDTO update(Long id, ClientProductRequestDTO dto){
 
-
         ClientProduct clientProduct = clientProductRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("ClientProduct not found with id: " + id));
 
-
-        clientProduct.setStatus(dto.getStatus());
+        if (dto.getStatus() != null)
+        {
+            clientProduct.setStatus(dto.getStatus());
+        }
 
         if (dto.getCloseDate() != null) {
             clientProduct.setCloseDate(dto.getCloseDate());
@@ -75,7 +81,7 @@ public class ClientProductService {
             clientProduct.setProduct(product);
         }
 
-        return mapper.toResponseDTO(clientProductRepository.save(clientProduct));
+        return clientProductMapper.toResponseDTO(clientProductRepository.save(clientProduct));
     }
 
     public void closeClientProduct(Long id) {
@@ -84,6 +90,13 @@ public class ClientProductService {
         clientProduct.setCloseDate(LocalDate.now());
         clientProduct.setStatus(Status.CLOSED);
         clientProductRepository.save(clientProduct);
+    }
+
+    public void delete (Long id) {
+        if (!clientProductRepository.existsById(id)) {
+            throw new EntityNotFoundException("ClientProduct not found with id: " + id);
+        }
+        clientProductRepository.deleteById(id);
     }
 
     private boolean isCreditProduct(Key key) {

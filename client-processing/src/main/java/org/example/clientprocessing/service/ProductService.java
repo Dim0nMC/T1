@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -22,23 +23,25 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public Product create(ProductRequestDTO dto) {
+    public ProductResponseDTO create(ProductRequestDTO dto) {
         Product product = productMapper.toEntity(dto);
-        return productRepository.save(product);
+        return productMapper.toResponseDTO(productRepository.save(product));
     }
 
-    public Product getById(Long id) {
+    public ProductResponseDTO getById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        return product;
+        return productMapper.toResponseDTO(product);
     }
 
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAll() {
+        return productRepository.findAll().stream()
+                .map(productMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
 
-    public Product update (Long id, ProductRequestDTO dto) {
+    public ProductResponseDTO update (Long id, ProductRequestDTO dto) {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -47,8 +50,7 @@ public class ProductService {
         product.setKey(dto.getKey());
         product.setCreateDate(dto.getCreateDate());
         product.setProductId(dto.getProductId());
-        return productRepository.save(product);
-
+        return productMapper.toResponseDTO(productRepository.save(product));
     }
 
     public void delete(Long id) {

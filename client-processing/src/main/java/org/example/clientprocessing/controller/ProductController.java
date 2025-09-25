@@ -18,22 +18,22 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody ProductRequestDTO dto) {
+    public ResponseEntity<ProductResponseDTO> create(@RequestBody ProductRequestDTO dto) {
         return ResponseEntity.ok(productService.create(dto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> get(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAll() {
+    public ResponseEntity<List<ProductResponseDTO>> getAll() {
         return ResponseEntity.ok(productService.getAll());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> update(
+    public ResponseEntity<ProductResponseDTO> update(
             @PathVariable Long id,
             @RequestBody ProductRequestDTO dto
     ) {
