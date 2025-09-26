@@ -1,8 +1,6 @@
 package org.example.clientprocessing.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.example.clientprocessing.kafka.ClientProductProducer;
 import org.example.clientprocessing.mapper.ClientProductMapper;
 import org.example.clientprocessing.model.*;
 import org.example.clientprocessing.model.dto.*;
@@ -10,6 +8,7 @@ import org.example.clientprocessing.model.enums.Key;
 import org.example.clientprocessing.model.enums.Status;
 import org.example.clientprocessing.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,24 +18,27 @@ import java.util.stream.Collectors;
 @Service
 public class ClientProductService {
 
+    private final KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate;
     private final ClientProductRepository clientProductRepository;
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final ClientProductMapper clientProductMapper;
-    private final ClientProductProducer producer;
+    //private final ClientProductProducer producer;
 
     @Autowired
     public ClientProductService(ClientProductRepository clientProductRepository,
                                 ClientRepository clientRepository,
                                 ProductRepository productRepository,
                                 ClientProductMapper clientProductMapper,
-                                ClientProductProducer producer) {
+                                //ClientProductProducer producer,
+                                KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate) {
 
         this.clientProductRepository = clientProductRepository;
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
         this.clientProductMapper = clientProductMapper;
-        this.producer = producer;
+        //this.producer = producer;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
@@ -54,10 +56,12 @@ public class ClientProductService {
 
         ClientProduct saved = clientProductRepository.save(clientProduct);
 
+        ClientProductMessageDTO message = clientProductMapper.toMessage(clientProduct);
+
         if (isCreditProduct(product.getKey())) {
-            producer.sendToClientCreditProducts("Client " + client.getId() + " opened product " + product.getProductId());
+            kafkaTemplate.send("client_products", message);
         } else {
-            producer.sendToClientProducts("Client " + client.getId() + " opened product " + product.getProductId());
+            kafkaTemplate.send("client_credit_products", message);
         }
 
         return clientProductMapper.toResponseDTO(saved);

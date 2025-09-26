@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.accountprocessing.model.enums.AccountStatus;
 
 @Getter
 @Setter
@@ -30,7 +31,7 @@ public class Account {
     private Boolean isRecalc = false;
     private Boolean cardExist = false;
 
-    private String status;
+    private AccountStatus status;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Card> cards;

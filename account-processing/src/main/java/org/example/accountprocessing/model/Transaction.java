@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.accountprocessing.model.enums.Status;
+import org.example.accountprocessing.model.enums.TransactionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ public class Transaction {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private TransactionStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime timestamp = LocalDateTime.now();

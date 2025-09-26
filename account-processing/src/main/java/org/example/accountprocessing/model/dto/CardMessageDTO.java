@@ -1,4 +1,4 @@
-package org.example.clientprocessing.model.dto;
+package org.example.accountprocessing.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

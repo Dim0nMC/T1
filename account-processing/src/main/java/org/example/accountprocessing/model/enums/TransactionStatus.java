@@ -1,5 +1,5 @@
 package org.example.accountprocessing.model.enums;
 
-public enum Status {
+public enum TransactionStatus {
     ALLOWED, PROCESSING, COMPLETE, BLOCKED, CANCELLED
 }
