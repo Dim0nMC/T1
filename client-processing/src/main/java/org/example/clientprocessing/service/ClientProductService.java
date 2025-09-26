@@ -9,6 +9,7 @@ import org.example.clientprocessing.model.dto.*;
 import org.example.clientprocessing.model.enums.Key;
 import org.example.clientprocessing.model.enums.Status;
 import org.example.clientprocessing.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,7 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ClientProductService {
 
     private final ClientProductRepository clientProductRepository;
@@ -24,6 +24,20 @@ public class ClientProductService {
     private final ProductRepository productRepository;
     private final ClientProductMapper clientProductMapper;
     private final ClientProductProducer producer;
+
+    @Autowired
+    public ClientProductService(ClientProductRepository clientProductRepository,
+                                ClientRepository clientRepository,
+                                ProductRepository productRepository,
+                                ClientProductMapper clientProductMapper,
+                                ClientProductProducer producer) {
+
+        this.clientProductRepository = clientProductRepository;
+        this.clientRepository = clientRepository;
+        this.productRepository = productRepository;
+        this.clientProductMapper = clientProductMapper;
+        this.producer = producer;
+    }
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
         Client client = clientRepository.findById(dto.getClientId())
@@ -41,9 +55,9 @@ public class ClientProductService {
         ClientProduct saved = clientProductRepository.save(clientProduct);
 
         if (isCreditProduct(product.getKey())) {
-            producer.sendToClientCreditProducts("Client " + client.getId() + " opened product " + product.getKey());
+            producer.sendToClientCreditProducts("Client " + client.getId() + " opened product " + product.getProductId());
         } else {
-            producer.sendToClientProducts("Client " + client.getId() + " opened product " + product.getKey());
+            producer.sendToClientProducts("Client " + client.getId() + " opened product " + product.getProductId());
         }
 
         return clientProductMapper.toResponseDTO(saved);
