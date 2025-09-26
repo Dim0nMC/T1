@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -15,5 +16,8 @@ public class ClientProductCreditMessageDTO {
     private Long clientId;
     private Long productId;
     private LocalDate openDate;
-    private Integer amount;
+
+    private BigDecimal amount;
+    private Long accountId;
+    private Integer monthCount;
 }

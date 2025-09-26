@@ -3,6 +3,7 @@ package org.example.clientprocessing.model.dto;
 import lombok.*;
 import org.example.clientprocessing.model.enums.Status;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -15,5 +16,8 @@ public class ClientProductRequestDTO {
     private Status status;
     private LocalDate openDate;
     private LocalDate closeDate;
-    private Integer amount;
+
+    private BigDecimal amount;
+    private Long accountId;
+    private Long monthCount;
 }

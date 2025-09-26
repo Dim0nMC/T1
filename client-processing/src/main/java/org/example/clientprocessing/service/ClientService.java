@@ -1,7 +1,9 @@
 package org.example.clientprocessing.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.clientprocessing.exception.BlacklistException;
 import org.example.clientprocessing.exception.DuplicateUserException;
+import org.example.clientprocessing.mapper.ClientMapper;
 import org.example.clientprocessing.mapper.ClientUserMapper;
 import org.example.clientprocessing.model.Client;
 import org.example.clientprocessing.model.User;
@@ -22,7 +24,8 @@ public class ClientService {
     private final UserService userService;
     private final BlacklistRegistryRepository blacklistRegistryRepository;
     private final ClientIdGeneratorService clientIdGeneratorService;
-    private final ClientUserMapper mapper;
+    private final ClientUserMapper clientUserMapper;
+    private final ClientMapper clientMapper;
 
     @Autowired
     public ClientService(ClientRepository clientRepository,
@@ -30,13 +33,15 @@ public class ClientService {
                          UserService userService,
                          BlacklistRegistryRepository blacklistRegistryRepository,
                          ClientIdGeneratorService clientIdGeneratorService,
-                         ClientUserMapper mapper) {
+                         ClientUserMapper clientUserMapper,
+                         ClientMapper clientMapper) {
         this.clientRepository = clientRepository;
         this.userRepository = userRepository;
         this.userService = userService;
         this.blacklistRegistryRepository = blacklistRegistryRepository;
         this.clientIdGeneratorService = clientIdGeneratorService;
-        this.mapper = mapper;
+        this.clientUserMapper = clientUserMapper;
+        this.clientMapper = clientMapper;
     }
 
     public Client create(ClientDTO clientDTO, User user) {
@@ -70,9 +75,9 @@ public class ClientService {
             throw new DuplicateUserException("User with this login already exists");
         }
 
-        ClientDTO clientDTO = mapper.toClientDTO(clientRegistrationDTO);
+        ClientDTO clientDTO = clientUserMapper.toClientDTO(clientRegistrationDTO);
         //clientDTO.setClientId(clientIdGeneratorService.generateClientId(clientRegistrationDTO));
-        UserDTO userDTO = mapper.toUserDTO(clientRegistrationDTO);
+        UserDTO userDTO = clientUserMapper.toUserDTO(clientRegistrationDTO);
 
         User user = userService.create(userDTO);
         Client client = this.create(clientDTO, user);
@@ -82,5 +87,11 @@ public class ClientService {
         clientRepository.save(client);
 
         return user;
+    }
+
+    public ClientDTO getById(Long id) {
+        Client client = clientRepository.findById(id).
+                orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + id));
+        return clientMapper.toClientDTO(client);
     }
 }

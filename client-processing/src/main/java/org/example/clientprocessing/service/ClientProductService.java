@@ -66,6 +66,7 @@ public class ClientProductService {
         } else {
             ClientProductCreditMessageDTO message = clientProductMapper.toCreditMessage(clientProduct);
             message.setAmount(dto.getAmount());
+            message.setAccountId(dto.getAccountId());
             creditKafkaTemplate.send("client_credit_products", message);
         }
 

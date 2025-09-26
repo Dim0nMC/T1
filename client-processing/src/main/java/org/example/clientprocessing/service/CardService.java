@@ -3,12 +3,10 @@ package org.example.clientprocessing.service;
 import org.example.clientprocessing.model.dto.CardMessageDTO;
 import org.example.clientprocessing.model.dto.CardRequestDTO;
 import org.example.clientprocessing.repository.ClientProductRepository;
-import org.example.clientprocessing.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -39,5 +37,7 @@ public class CardService {
 
         kafkaTemplate.send("client_cards", message);
     }
+
+
 }
 

@@ -3,13 +3,11 @@ package org.example.clientprocessing.controller;
 import jakarta.validation.Valid;
 import org.example.clientprocessing.model.Client;
 import org.example.clientprocessing.model.User;
+import org.example.clientprocessing.model.dto.ClientDTO;
 import org.example.clientprocessing.model.dto.ClientRegistrationDTO;
 import org.example.clientprocessing.service.ClientService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +27,11 @@ public class ClientController {
         User user = clientService.register(dto);
 
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientDTO> get(@PathVariable Long id) {
+       return ResponseEntity.ok(clientService.getById(id));
     }
 
 }
