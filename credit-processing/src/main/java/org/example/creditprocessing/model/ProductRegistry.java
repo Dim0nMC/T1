@@ -37,6 +37,8 @@ public class ProductRegistry {
 
     private LocalDate openDate;
 
+    private Integer monthCount;
+
     @OneToMany(mappedBy = "productRegistry", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PaymentRegistry> payments;
 }

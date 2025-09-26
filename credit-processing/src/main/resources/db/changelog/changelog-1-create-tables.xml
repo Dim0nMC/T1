@@ -22,6 +22,7 @@
             </column>
             <column name="interest_rate" type="NUMERIC(5,2)"/>
             <column name="open_date" type="DATE"/>
+            <column name="month_count" type="INT"/>
         </createTable>
     </changeSet>
 

@@ -23,6 +23,10 @@
             <column name="interest_rate" valueNumeric="6.0"/>
             <column name="open_date" valueDate="2025-07-15"/>
         </insert>
+
+        <rollback>
+            <delete tableName="product_registry"/>
+        </rollback>
     </changeSet>
 
     <!-- PaymentRegistry -->
@@ -47,6 +51,10 @@
             <column name="expired" valueBoolean="false"/>
             <column name="payment_expiration_date" valueDate="2025-08-20"/>
         </insert>
+
+        <rollback>
+            <delete tableName="payment_registry"/>
+        </rollback>
     </changeSet>
 
 </databaseChangeLog>
