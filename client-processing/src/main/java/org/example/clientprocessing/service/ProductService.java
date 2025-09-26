@@ -1,5 +1,6 @@
 package org.example.clientprocessing.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.clientprocessing.mapper.ProductMapper;
 import org.example.clientprocessing.model.Product;
 import org.example.clientprocessing.model.dto.ProductRequestDTO;
@@ -30,7 +31,7 @@ public class ProductService {
 
     public ProductResponseDTO getById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
         return productMapper.toResponseDTO(product);
     }
 
@@ -44,7 +45,7 @@ public class ProductService {
     public ProductResponseDTO update (Long id, ProductRequestDTO dto) {
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
 
         product.setName(dto.getName());
         product.setKey(dto.getKey());
@@ -55,8 +56,9 @@ public class ProductService {
 
     public void delete(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found");
+            throw new EntityNotFoundException("Product not found");
         }
+
         productRepository.deleteById(id);
     }
 

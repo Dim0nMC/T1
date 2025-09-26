@@ -27,10 +27,10 @@ public class ClientProductService {
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
         Client client = clientRepository.findById(dto.getClientId())
-                .orElseThrow(() -> new EntityNotFoundException("Client not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Client not found with id: " + dto.getClientId()));
 
         Product product = productRepository.findById(dto.getProductId())
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + dto.getProductId()));
 
         ClientProduct clientProduct = new ClientProduct();
         clientProduct.setClient(client);
@@ -86,13 +86,15 @@ public class ClientProductService {
 
     public void closeClientProduct(Long id) {
         ClientProduct clientProduct = clientProductRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Client product not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Client product not found with id: "+ id));
         clientProduct.setCloseDate(LocalDate.now());
         clientProduct.setStatus(Status.CLOSED);
         clientProductRepository.save(clientProduct);
     }
 
     public void delete (Long id) {
+
+
         if (!clientProductRepository.existsById(id)) {
             throw new EntityNotFoundException("ClientProduct not found with id: " + id);
         }
