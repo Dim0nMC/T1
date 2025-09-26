@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class ClientProductService {
 
     private final KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate;
+    private final KafkaTemplate<String, ClientProductCreditMessageDTO> creditKafkaTemplate;
     private final ClientProductRepository clientProductRepository;
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
@@ -31,7 +32,8 @@ public class ClientProductService {
                                 ProductRepository productRepository,
                                 ClientProductMapper clientProductMapper,
                                 //ClientProductProducer producer,
-                                KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate) {
+                                KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate,
+                                KafkaTemplate<String, ClientProductCreditMessageDTO> creditKafkaTemplate) {
 
         this.clientProductRepository = clientProductRepository;
         this.clientRepository = clientRepository;
@@ -39,6 +41,7 @@ public class ClientProductService {
         this.clientProductMapper = clientProductMapper;
         //this.producer = producer;
         this.kafkaTemplate = kafkaTemplate;
+        this.creditKafkaTemplate = creditKafkaTemplate;
     }
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
@@ -56,12 +59,14 @@ public class ClientProductService {
 
         ClientProduct saved = clientProductRepository.save(clientProduct);
 
-        ClientProductMessageDTO message = clientProductMapper.toMessage(clientProduct);
 
         if (isCreditProduct(product.getKey())) {
+            ClientProductMessageDTO message = clientProductMapper.toMessage(clientProduct);
             kafkaTemplate.send("client_products", message);
         } else {
-            kafkaTemplate.send("client_credit_products", message);
+            ClientProductCreditMessageDTO message = clientProductMapper.toCreditMessage(clientProduct);
+            message.setAmount(dto.getAmount());
+            creditKafkaTemplate.send("client_credit_products", message);
         }
 
         return clientProductMapper.toResponseDTO(saved);

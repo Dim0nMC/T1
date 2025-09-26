@@ -1,4 +1,4 @@
-package org.example.accountprocessing.config;
+package org.example.creditprocessing.config;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -28,7 +28,7 @@ public class KafkaConsumerConfig {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "ms2-group");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "ms3-group");
         return props;
     }
 

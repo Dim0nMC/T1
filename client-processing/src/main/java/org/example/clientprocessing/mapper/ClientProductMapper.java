@@ -3,7 +3,9 @@ package org.example.clientprocessing.mapper;
 import org.example.clientprocessing.model.Client;
 import org.example.clientprocessing.model.ClientProduct;
 import org.example.clientprocessing.model.Product;
+import org.example.clientprocessing.model.dto.ClientProductCreditMessageDTO;
 import org.example.clientprocessing.model.dto.ClientProductMessageDTO;
+import org.example.clientprocessing.model.dto.ClientProductRequestDTO;
 import org.example.clientprocessing.model.dto.ClientProductResponseDTO;
 import org.mapstruct.*;
 
@@ -15,6 +17,8 @@ public interface ClientProductMapper {
             @Mapping(source = "product.id", target = "productId")
     })
     ClientProductResponseDTO toResponseDTO(ClientProduct clientProduct);
+
+    ClientProductCreditMessageDTO toCreditMessage(ClientProduct clientProduct);
 
     ClientProductMessageDTO toMessage(ClientProduct clientProduct);
 

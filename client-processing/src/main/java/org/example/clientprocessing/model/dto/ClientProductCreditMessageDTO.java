@@ -1,7 +1,9 @@
 package org.example.clientprocessing.model.dto;
 
-import lombok.*;
-import org.example.clientprocessing.model.enums.Status;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -9,11 +11,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientProductRequestDTO {
+public class ClientProductCreditMessageDTO {
     private Long clientId;
     private Long productId;
-    private Status status;
     private LocalDate openDate;
-    private LocalDate closeDate;
     private Integer amount;
 }
