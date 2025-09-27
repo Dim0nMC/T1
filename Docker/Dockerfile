@@ -6,6 +6,7 @@ COPY . .
 ARG MODULE
 RUN mvn -pl $MODULE -am clean package -DskipTests
 
+
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
 ARG MODULE

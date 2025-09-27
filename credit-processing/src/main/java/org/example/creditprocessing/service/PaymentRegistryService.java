@@ -22,7 +22,7 @@ public class PaymentRegistryService {
 
     public void generatePaymentSchedule(ProductRegistry productRegistry, BigDecimal loanAmount) {
 
-        BigDecimal annualInterestRate = productRegistry.getInterestRate(); // годовая ставка, например 0.22
+        BigDecimal annualInterestRate = productRegistry.getInterestRate(); // годовая ставка
         int monthCount = productRegistry.getMonthCount(); // количество месяцев
         LocalDate openDate = productRegistry.getOpenDate(); // дата открытия кредита
 
