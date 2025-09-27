@@ -1,7 +1,6 @@
 package org.example.creditprocessing.service;
 
 import org.example.creditprocessing.repository.PaymentRegistryRepository;
-import org.example.creditprocessing.repository.ProductRegistryRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
