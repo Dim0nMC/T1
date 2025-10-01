@@ -63,6 +63,7 @@
             <column name="is_credit" type="BOOLEAN" defaultValue="false"/>
             <column name="payed_at" type="TIMESTAMP"/>
             <column name="type" type="VARCHAR(20)"/>
+            <column name="expired" type="boolean"/>
         </createTable>
         <addForeignKeyConstraint baseTableName="payments"
                                  baseColumnNames="account_id"

@@ -23,4 +23,12 @@ public class AccountService {
         Account account = accountMapper.toEntity(message);
         return accountRepository.save(account);
     }
+
+    public Account getById(Long id) {
+        return accountRepository.findById(id).orElse(null);
+    }
+
+    public Account update(Account account) {
+        return accountRepository.save(account);
+    }
 }

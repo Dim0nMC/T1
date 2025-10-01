@@ -11,6 +11,8 @@ import org.example.accountprocessing.repository.TransactionRepository;
 import org.example.accountprocessing.service.PaymentService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class DepositCreditStrategy implements TransactionStrategy {
 
@@ -37,6 +39,8 @@ public class DepositCreditStrategy implements TransactionStrategy {
                 if(account.getBalance().compareTo(transaction.getAmount())>=0){
                     account.setBalance(account.getBalance().subtract(transaction.getAmount()));
                     accountRepository.save(account);
+                    actualPayment.setPayedAt(LocalDateTime.now());
+                    paymentService.update(actualPayment);
                 }
                 else {
                     actualPayment.setExpired(true);
