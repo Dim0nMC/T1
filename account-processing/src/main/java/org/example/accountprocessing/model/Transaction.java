@@ -2,11 +2,9 @@ package org.example.accountprocessing.model;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.accountprocessing.model.enums.TransactionStatus;
+import org.example.accountprocessing.model.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,11 +29,14 @@ public class Transaction {
     @JoinColumn(name = "card_id")
     private Card card;
 
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionType type;
+
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    private TransactionStatus status;
+    private TransactionStatus status = TransactionStatus.ALLOWED;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime timestamp = LocalDateTime.now();

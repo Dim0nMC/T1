@@ -22,14 +22,14 @@ public class CardService {
         this.accountRepository = accountRepository;
     }
 
-    public Card create(CardMessageDTO dto) {
-        Account account = accountRepository.getById(dto.getAccountId());
+    public Card create(CardMessageDTO message) {
+        Account account = accountRepository.getById(message.getAccountId());
 
         if(account.getStatus() == AccountStatus.ACTIVE) {
             Card card = new Card();
             card.setAccount(account);
-            card.setCardId(dto.getCardId());
-            card.setPaymentSystem(dto.getPaymentSystem());
+            card.setCardId(message.getCardId());
+            card.setPaymentSystem(message.getPaymentSystem());
             cardRepository.save(card);
 
             account.setCardExist(true);
