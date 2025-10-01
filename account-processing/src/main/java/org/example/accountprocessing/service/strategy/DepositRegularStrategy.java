@@ -24,19 +24,10 @@ public class DepositRegularStrategy implements TransactionStrategy {
     @Transactional
     public void process(Transaction transaction, Account account) {
         try {
-            transaction.setStatus(TransactionStatus.PROCESSING);
-            transactionRepository.save(transaction);
-
             account.setBalance(account.getBalance().add(transaction.getAmount()));
             accountRepository.save(account);
 
-            transaction.setStatus(TransactionStatus.COMPLETE);
-            transactionRepository.save(transaction);
-
         } catch (RuntimeException ex) {
-            transaction.setStatus(TransactionStatus.CANCELLED);
-            transactionRepository.save(transaction);
-
             throw ex;
         }
     }

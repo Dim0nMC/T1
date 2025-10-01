@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.accountprocessing.model.enums.PaymentType;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,9 +28,10 @@ public class Payment {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
-    private LocalDateTime paymentDate;
+    private LocalDate paymentDate;
     private BigDecimal amount;
     private Boolean isCredit = false;
     private LocalDateTime payedAt;
-    private String type;
+    private PaymentType type;
+    private Boolean expired = false;
 }

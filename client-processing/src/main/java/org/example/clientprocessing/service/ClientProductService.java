@@ -1,6 +1,7 @@
 package org.example.clientprocessing.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.example.clientprocessing.kafka.ClientProductProducer;
 import org.example.clientprocessing.mapper.ClientProductMapper;
 import org.example.clientprocessing.model.*;
 import org.example.clientprocessing.model.dto.*;
@@ -18,30 +19,24 @@ import java.util.stream.Collectors;
 @Service
 public class ClientProductService {
 
-    private final KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate;
-    private final KafkaTemplate<String, ClientProductCreditMessageDTO> creditKafkaTemplate;
+    private final ClientProductProducer clientProductProducer;
     private final ClientProductRepository clientProductRepository;
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final ClientProductMapper clientProductMapper;
-    //private final ClientProductProducer producer;
 
     @Autowired
     public ClientProductService(ClientProductRepository clientProductRepository,
                                 ClientRepository clientRepository,
                                 ProductRepository productRepository,
                                 ClientProductMapper clientProductMapper,
-                                //ClientProductProducer producer,
-                                KafkaTemplate<String, ClientProductMessageDTO> kafkaTemplate,
-                                KafkaTemplate<String, ClientProductCreditMessageDTO> creditKafkaTemplate) {
+                                ClientProductProducer clientProductProducer) {
 
         this.clientProductRepository = clientProductRepository;
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
         this.clientProductMapper = clientProductMapper;
-        //this.producer = producer;
-        this.kafkaTemplate = kafkaTemplate;
-        this.creditKafkaTemplate = creditKafkaTemplate;
+        this.clientProductProducer = clientProductProducer;
     }
 
     public ClientProductResponseDTO addProductToClient(ClientProductRequestDTO dto) {
@@ -62,12 +57,12 @@ public class ClientProductService {
 
         if (isCreditProduct(product.getKey())) {
             ClientProductMessageDTO message = clientProductMapper.toMessage(clientProduct);
-            kafkaTemplate.send("client_products", message);
+            clientProductProducer.sendToClientProducts(message);
         } else {
             ClientProductCreditMessageDTO message = clientProductMapper.toCreditMessage(clientProduct);
             message.setAmount(dto.getAmount());
             message.setAccountId(dto.getAccountId());
-            creditKafkaTemplate.send("client_credit_products", message);
+            clientProductProducer.sendToClientCreditProducts(message);
         }
 
         return clientProductMapper.toResponseDTO(saved);
