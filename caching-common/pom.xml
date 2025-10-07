@@ -7,10 +7,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>logging-common</artifactId>
+    <artifactId>caching-common</artifactId>
     <packaging>jar</packaging>
 
-    <name>logging-common</name>
+    <name>caching-common</name>
     <url>http://maven.apache.org</url>
 
     <properties>

@@ -25,6 +25,7 @@
     <module>account-processing</module>
     <module>credit-processing</module>
     <module>logging-common</module>
+    <module>caching-common</module>
   </modules>
 
   <parent>
@@ -51,8 +52,11 @@
       <artifactId>logging-common</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-
-
+    <dependency>
+      <groupId>org.example</groupId>
+      <artifactId>caching-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>

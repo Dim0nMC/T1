@@ -1,4 +1,4 @@
-package org.example;
+package org.example.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.ProceedingJoinPoint;

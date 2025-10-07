@@ -1,7 +1,6 @@
-package org.example;
+package org.example.aspect;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.common.protocol.types.Field;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -32,6 +31,7 @@ public class HttpIncomeRequestLogAspect {
     @Before("@annotation(httpIncomeRequestLog)")
     public void logBefore(JoinPoint joinPoint, HttpIncomeRequestLog httpIncomeRequestLog) throws Throwable {
 
+        try{
         String methodSignature = joinPoint.getSignature().toShortString();
 
         Map<String,Object> message = Map.of(
@@ -50,6 +50,11 @@ public class HttpIncomeRequestLogAspect {
                 .setHeader(KafkaHeaders.KEY, serviceName)
                 .setHeader("type", "INFO")
                 .build());
+
+        } catch (Exception ex) {
+            System.err.println("Failed to log method: " + ex.getMessage());
+            ex.printStackTrace();
+        }
 
     }
 }
