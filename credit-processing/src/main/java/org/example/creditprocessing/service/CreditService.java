@@ -1,16 +1,14 @@
 package org.example.creditprocessing.service;
 
 
+import org.example.annotation.LogDatasourceError;
 import org.example.creditprocessing.mapper.ProductRegistryMapper;
 import org.example.creditprocessing.model.ProductRegistry;
 import org.example.creditprocessing.model.dto.ClientInfoDTO;
 import org.example.creditprocessing.model.dto.ClientProductCreditMessageDTO;
 import org.example.creditprocessing.repository.ProductRegistryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 public class CreditService {
@@ -35,6 +33,8 @@ public class CreditService {
         this.paymentRegistryService = paymentRegistryService;
     }
 
+
+    @LogDatasourceError
     public void addProduct(ClientProductCreditMessageDTO message) {
 
         ClientInfoDTO clientInfoDTO = clientService.getClientInfo(message.getClientId());
